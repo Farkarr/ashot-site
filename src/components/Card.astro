@@ -1,0 +1,26 @@
+---
+interface Props {
+  title: string;
+  description: string;
+  className?: string;
+  classTitle?: string;
+  classDesc?: string;
+}
+const { title, description, classTitle, classDesc, className } = Astro.props;
+---
+
+<div class={" max-w-sm border border-gray-200 rounded-lg shadow dark:bg-gray-800 dark:border-gray-700 " + className}>
+   {Astro.slots.has("default") && <div class="flex justify-center pt-10 box-border">
+      <slot/>
+
+   </div>}
+  
+   <!-- <a href="#">
+   </a> -->
+   <div class="text-justify">
+       <a href="#">
+           <h5 class={"mb-2 text-2xl font-bold tracking-tight text-center " + classTitle}>{title}</h5>
+       </a>
+       <p class={"mb-3 font-normal " + classDesc}>{description}</p>
+   </div>
+</div>

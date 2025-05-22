@@ -1,0 +1,67 @@
+---
+import { Image } from "astro:assets";
+import Card from "../components/Card.astro";
+import Layout from "../layouts/Layout.astro";
+import img from "../assets/img/reform.png";
+---
+
+<Layout title="Pladur">
+	<section	class="relative flex flex-col items-center justify-center gap-5 w-full min-h-[500px] text-center bg-blue-200">
+		<Image src={img} alt="" class="absolute inset-0 w-full h-full object-cover" />
+		<h1 class="relative text-3xl font-bold text-orange-700">Expertos en Pladur</h1>	
+		<p class="relative text-orange-700">
+			Hemos trabajado en +1000 proyectos, estas en buenas manos.
+		</p>
+		<a href="/contact" class="mt-8 font-bold border w-auto border-orange-700 p-2 relative rounded text-orange-700 hover:bg-orange-700 hover:text-white transition-all">
+			Contáctanos
+		</a>
+	</section>
+	<section class="w-full flex flex-wrap gap-3 justify-center py-5">
+		<Card 
+			title="Graphic Design" 
+			description="Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse varius enim in eros elementum tristique."
+			classTitle="text-red-700"
+			className="w-64">
+			
+		</Card>
+		<Card 
+			title="Graphic Design" 
+			description="Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse varius enim in eros elementum tristique."
+			classTitle="text-red-700"
+			className="w-64">
+			
+		</Card>
+		<Card 
+			title="Graphic Design" 
+			description="Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse varius enim in eros elementum tristique."
+			classTitle="text-red-700"
+			className="w-64">
+			
+		</Card>
+		<Card 
+			title="Graphic Design" 
+			description="Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse varius enim in eros elementum tristique."
+			classTitle="text-red-700"
+			className="w-64">
+			
+		</Card>
+		<Card 
+			title="Graphic Design" 
+			description="Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse varius enim in eros elementum tristique."
+			classTitle="text-red-700"
+			className="w-64">
+			
+		</Card>
+		<Card 
+			title="Graphic Design" 
+			description="Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse varius enim in eros elementum tristique."
+			classTitle="text-red-700"
+			className="w-52">
+			
+		</Card>
+		
+	</section>
+	<section class="w-full mt-24">
+		<h1>hola</h1>
+	</section>
+</Layout>
