@@ -1,5 +1,6 @@
 ---
 import Layout from "../layouts/Layout.astro";
+import { BASE_URL } from "../config/config";
 ---
 
 <Layout title="Especialistas en Pladur, Techos y Reformas | Construcción XYZ">
@@ -12,7 +13,7 @@ import Layout from "../layouts/Layout.astro";
      <div class="relative z-10 text-center px-4 max-w-2xl">
        <h1 class="text-5xl font-extrabold leading-tight mb-4">Expertos en Pladur, Techos Falsos y Reformas Interiores</h1>
        <p class="text-xl mb-6">Instalación profesional con materiales de calidad y resultados garantizados. Trabajamos en viviendas, oficinas y locales.</p>
-       <a href="/services" class="inline-block bg-yellow-500 hover:bg-yellow-600 text-black font-semibold px-6 py-3 rounded shadow">Ver Servicios</a>
+       <a href={BASE_URL + "/services"} class="inline-block bg-yellow-500 hover:bg-yellow-600 text-black font-semibold px-6 py-3 rounded shadow">Ver Servicios</a>
      </div>
    </section>
 
@@ -144,6 +145,6 @@ import Layout from "../layouts/Layout.astro";
    <section class="py-20 px-6 text-center bg-yellow-500 text-black">
      <h2 class="text-3xl font-bold mb-4">¿Listo para transformar tu hogar o negocio?</h2>
      <p class="mb-6 text-lg max-w-2xl mx-auto">Pide tu presupuesto hoy y recibe asesoramiento gratuito por parte de nuestro equipo técnico. Te ayudamos a planificar tu reforma, elegir materiales y ejecutar con total confianza.</p>
-     <a href="/contacto" class="inline-block bg-black text-white px-6 py-3 rounded hover:bg-gray-800">Contáctanos</a>
+     <a href={BASE_URL + "/contacto"} class="inline-block bg-black text-white px-6 py-3 rounded hover:bg-gray-800">Contáctanos</a>
    </section>
  </Layout>
