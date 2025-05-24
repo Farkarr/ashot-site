@@ -6,6 +6,6 @@ import tailwind from '@astrojs/tailwind';
 // https://astro.build/config
 export default defineConfig({
   integrations: [tailwind()],
-  site: "https://Farkarr.github.io",
+  site: "https://farkarr.github.io",
   base: "/ashot-site"
 });
