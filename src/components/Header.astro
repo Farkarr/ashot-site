@@ -1,40 +1,38 @@
 ---
-import { Image } from 'astro:assets';
-import logo from '../assets/img/logo.png';
+import { BASE_URL } from "../config/config";
+import MobileMenuToggle from "./MobileMenuToggle.astro";
 ---
 
-<header class="flex justify-between py-8 mx-auto w-3/5 lg:py-7 ">
-   <!-- <Image src={logo} class="max-w-20 max-h-20" alt="logo" /> -->
-   <a href="/" class="">Eular Group</a>
-   <!-- <div class="mb-8 lg:mb-16 max-w-20 max-h-20">
-   </div> -->
-   <nav class="flex items-end gap-5">
-      <a class="" href="/">Inicio</a>
-      <a class="" href="/services">Servicios</a>
-      <!-- <a class="" href="/projects">Proyectos</a> -->
-      <a class="" href="/about">Sobre nosotros</a>
-      <a class="" href="/contact">Contacto</a> 
-   </nav>
+<header class="bg-white shadow-sm">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <div class="flex justify-between items-center py-6 md:justify-start md:space-x-10">
+      <!-- Logo -->
+      <div class="flex justify-start lg:w-0 lg:flex-1">
+        <a href="/" class="flex items-center text-xl font-bold text-gray-800">
+          Eular Group
+        </a>
+      </div>
+
+      <!-- Botón hamburguesa -->
+      <div class="md:hidden">
+        <MobileMenuToggle client:load />
+      </div>
+
+      <!-- Navegación desktop -->
+      <nav class="hidden md:flex space-x-8 items-center" aria-label="Main Navigation">
+        <a href={BASE_URL} class="text-base font-medium text-gray-700 hover:text-yellow-500">Inicio</a>
+        <a href={BASE_URL + "/services"} class="text-base font-medium text-gray-700 hover:text-yellow-500">Servicios</a>
+        <a href={BASE_URL + "/about"} class="text-base font-medium text-gray-700 hover:text-yellow-500">Sobre nosotros</a>
+        <a href={BASE_URL + "/contact"} class="text-base font-medium text-gray-700 hover:text-yellow-500">Contacto</a>
+      </nav>
+    </div>
+  </div>
+
+  <!-- Menú móvil -->
+  <div id="mobile-menu" class="md:hidden hidden px-4 pb-6 space-y-2">
+    <a href={BASE_URL} class="block text-gray-700 font-medium hover:text-yellow-500">Inicio</a>
+    <a href={BASE_URL + "/services"} class="block text-gray-700 font-medium hover:text-yellow-500">Servicios</a>
+    <a href={BASE_URL + "/about"} class="block text-gray-700 font-medium hover:text-yellow-500">Sobre nosotros</a>
+    <a href={BASE_URL + "/contact"} class="block text-gray-700 font-medium hover:text-yellow-500">Contacto</a>
+  </div>
 </header>
-
-
-
-
-
-
-
-
-
-
-
-<!-- 
-<header class="py-8 px-4 mx-auto max-w-xl lg:py-16 lg:px-6">
-   <div class="mx-auto text-center mb-8 lg:mb-16">
-      <h2 class="mb-4 text-5xl font-extrabold tracking-tight">SpaceX Launches</h2>
-      <p class="font-light text-gray-500 sm:text-xl dark:text-gray-400">All information about SpaceX launches</p>
-   </div>
-   <nav class="flex flex-col items-center justify-between w-full text-center md:flex-row">
-      <a class="text-white" href="/">Ultimos lanzamientos</a>
-      <a class="text-white" href="/oldest">Los mas antiguos</a>
-   </nav>
-</header> -->
