@@ -1,5 +1,7 @@
 # build output
 dist/
+src/components/tsconfig.json
+
 
 # generated types
 .astro/
