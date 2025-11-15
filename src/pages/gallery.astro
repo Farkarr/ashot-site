@@ -17,17 +17,17 @@ const images = Object.values(imagePaths).map((img: any) => ({
       Aquí puedes ver algunos de nuestros trabajos realizados. Todos los proyectos han sido ejecutados cumpliendo altos estándares de calidad, limpieza y acabados.
     </p> -->
 
-    <div id="gallery" class="grid gap-4 grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-2">
-      {images.map(({ img, alt }, i) => (
-        <Image
-          src={img}
-          alt={alt}
-          data-index={i}
-          class="w-full h-96 sm:h-96 object-cover rounded shadow hover:scale-105 transition-transform duration-300 cursor-pointer"
-          loading="lazy"
-        />
-      ))}
-    </div>
+    <div id="gallery"  class="grid gap-4 grid-cols-1 sm:grid-cols-2 md:grid-cols-3">
+  {images.map(({ img, alt }, i) => (
+    <Image
+      src={img}
+      alt={alt}
+      data-index={i}
+      class="w-full h-40 sm:h-48 md:h-56 object-cover rounded shadow hover:scale-105 transition-transform duration-300 cursor-pointer"
+      loading="lazy"
+    />
+  ))}
+</div>
 
     <!-- Controles de paginado de la galería -->
     <div id="gallery-pagination" class="mt-6 flex items-center justify-center gap-2"></div>
