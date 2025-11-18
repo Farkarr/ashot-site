@@ -7,5 +7,5 @@ import tailwind from '@astrojs/tailwind';
 export default defineConfig({
   integrations: [tailwind()],
   site: "https://farkarr.github.io",
-  base: "ashot-site"
+  base: ""
 });
