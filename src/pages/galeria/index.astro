@@ -1,0 +1,232 @@
+---
+import Layout from "../../layouts/Layout.astro";
+import { Image } from 'astro:assets';
+
+const imagePaths = import.meta.glob('../../assets/gallery/*.{jpg,jpeg,png,webp}', { eager: true });
+
+const images = Object.values(imagePaths).map((img: any) => ({
+  img: img.default,
+  alt: img.default.src.split('/').pop().split('.')[0],
+}));
+---
+
+<Layout title="Galería de fotos | Grupo ELAR">
+  <section class="py-16 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto relative">
+    <h1 class="text-3xl font-bold text-center mb-10">Galería de fotos</h1>
+    <!-- <p class="text-center text-gray-600 max-w-3xl mx-auto mb-12">
+      Aquí puedes ver algunos de nuestros trabajos realizados. Todos los proyectos han sido ejecutados cumpliendo altos estándares de calidad, limpieza y acabados.
+    </p> -->
+
+    <div id="gallery"  class="grid gap-4 grid-cols-1 sm:grid-cols-2 md:grid-cols-3">
+  {images.map(({ img, alt }, i) => (
+    <Image
+      src={img}
+      alt={alt}
+      data-index={i}
+      class="w-full h-40 sm:h-48 md:h-56 object-cover rounded shadow hover:scale-105 transition-transform duration-300 cursor-pointer"
+      loading="lazy"
+    />
+  ))}
+</div>
+
+    <!-- Controles de paginado de la galería -->
+    <div id="gallery-pagination" class="mt-6 flex items-center justify-center gap-2"></div>
+
+    <!-- Lightbox (oculto por defecto) -->
+    <div id="lightbox" class="hidden fixed inset-0 bg-black/90 flex items-center justify-center z-50">
+      <button id="prev" class="absolute left-5 text-white text-4xl font-bold hover:scale-110">&lt;</button>
+      <img id="lightbox-img" class="max-h-[90vh] max-w-[90vw] rounded-lg shadow-lg transition-transform duration-300" />
+      <button id="next" class="absolute right-5 text-white text-4xl font-bold hover:scale-110">&gt;</button>
+      <button id="close" class="absolute top-5 right-5 text-white text-3xl font-bold hover:scale-110">×</button>
+      <!-- Indicador de paginado del lightbox -->
+      <div id="lightbox-counter" class="absolute bottom-6 text-white text-sm px-3 py-1 rounded bg-white/10 backdrop-blur">
+        1 / 1
+      </div>
+    </div>
+
+      <script>
+         document.addEventListener('DOMContentLoaded', () => {
+        // --------- Selecciones base ----------
+        // Astro <Image> normalmente genera <picture><img/></picture>.
+        const pictureEls = Array.from(
+          document.querySelectorAll<HTMLElement>('#gallery picture')
+        );
+        const directImgEls = Array.from(
+          document.querySelectorAll<HTMLImageElement>('#gallery > img')
+        );
+
+        // Si hay <picture>, usamos esos; si no, los <img> directos como fallback
+        const itemPictures: HTMLElement[] =
+          pictureEls.length > 0
+            ? pictureEls
+            : (directImgEls as unknown as HTMLElement[]);
+
+        const thumbImgs: HTMLImageElement[] = Array.from(
+          document.querySelectorAll<HTMLImageElement>(
+            '#gallery img, #gallery picture > img'
+          )
+        );
+
+        const lightbox = document.getElementById('lightbox') as HTMLDivElement | null;
+        const lightboxImg = document.getElementById('lightbox-img') as HTMLImageElement | null;
+        const prevBtn = document.getElementById('prev') as HTMLButtonElement | null;
+        const nextBtn = document.getElementById('next') as HTMLButtonElement | null;
+        const closeBtn = document.getElementById('close') as HTMLButtonElement | null;
+        const counter = document.getElementById('lightbox-counter') as HTMLDivElement | null;
+        const paginationEl = document.getElementById('gallery-pagination') as HTMLDivElement | null;
+
+        // Comprobaciones de seguridad
+        if (
+          !lightbox ||
+          !lightboxImg ||
+          !prevBtn ||
+          !nextBtn ||
+          !closeBtn ||
+          !counter ||
+          !paginationEl
+        ) {
+          console.warn('Lightbox: faltan elementos en el DOM');
+          return;
+        }
+
+        if (!thumbImgs.length) {
+          console.warn('Lightbox: no se han encontrado miniaturas');
+          return;
+        }
+
+        // --------- Paginado Galería ----------
+        const PAGE_SIZE = 15;
+        let currentPage = 1;
+        const totalItems = itemPictures.length;
+        const totalPages = Math.max(1, Math.ceil(totalItems / PAGE_SIZE));
+
+        const buildGalleryPagination = (): void => {
+          paginationEl.innerHTML = '';
+
+          // Botón Prev
+          const prev = document.createElement('button');
+          prev.textContent = 'Anterior';
+          prev.className = 'px-3 py-1 rounded border text-sm disabled:opacity-40';
+          prev.disabled = currentPage === 1;
+          prev.addEventListener('click', () => renderGalleryPage(currentPage - 1));
+          paginationEl.appendChild(prev);
+
+          // Botones numéricos
+          const pagesToShow: (number | '...')[] = [];
+          if (totalPages <= 7) {
+            for (let i = 1; i <= totalPages; i++) pagesToShow.push(i);
+          } else {
+            pagesToShow.push(1);
+            if (currentPage > 3) pagesToShow.push('...');
+            const start = Math.max(2, currentPage - 1);
+            const end = Math.min(totalPages - 1, currentPage + 1);
+            for (let i = start; i <= end; i++) pagesToShow.push(i);
+            if (currentPage < totalPages - 2) pagesToShow.push('...');
+            pagesToShow.push(totalPages);
+          }
+
+          pagesToShow.forEach((p) => {
+            const btn = document.createElement('button');
+            if (p === '...') {
+              btn.textContent = '…';
+              btn.disabled = true;
+              btn.className = 'px-2 py-1 text-sm opacity-60';
+            } else {
+              btn.textContent = String(p);
+              btn.className =
+                'px-3 py-1 rounded border text-sm ' +
+                (p === currentPage ? 'font-bold' : '');
+              btn.addEventListener('click', () => renderGalleryPage(p));
+            }
+            paginationEl.appendChild(btn);
+          });
+
+          // Botón Next
+          const next = document.createElement('button');
+          next.textContent = 'Siguiente';
+          next.className = 'px-3 py-1 rounded border text-sm disabled:opacity-40';
+          next.disabled = currentPage === totalPages;
+          next.addEventListener('click', () =>
+            renderGalleryPage(currentPage + 1)
+          );
+          paginationEl.appendChild(next);
+        };
+
+        const renderGalleryPage = (page: number): void => {
+          currentPage = Math.min(Math.max(1, page), totalPages);
+          const start = (currentPage - 1) * PAGE_SIZE;
+          const end = start + PAGE_SIZE;
+
+          itemPictures.forEach((pic, idx) => {
+            pic.style.display = idx >= start && idx < end ? '' : 'none';
+          });
+
+          buildGalleryPagination();
+        };
+
+        // --------- Lightbox ----------
+        let current = 0;
+
+        const updateCounter = (): void => {
+          counter.textContent = `${current + 1} / ${thumbImgs.length}`;
+        };
+
+        const showLightbox = (index: number): void => {
+          current = index;
+          const img = thumbImgs[index];
+          if (!img) return;
+
+          const src = img.currentSrc || img.src;
+          lightboxImg.src = src;
+          updateCounter();
+          lightbox.classList.remove('hidden');
+        };
+
+        const hideLightbox = (): void => {
+          lightbox.classList.add('hidden');
+        };
+
+        const nextImage = (): void => {
+          current = (current + 1) % thumbImgs.length;
+          showLightbox(current);
+        };
+
+        const prevImage = (): void => {
+          current = (current - 1 + thumbImgs.length) % thumbImgs.length;
+          showLightbox(current);
+        };
+
+        // Click en miniaturas
+        thumbImgs.forEach((img, i) => {
+          img.style.cursor = 'pointer';
+          img.addEventListener('click', () => showLightbox(i));
+        });
+
+        // Controles lightbox
+        closeBtn.addEventListener('click', hideLightbox);
+        nextBtn.addEventListener('click', nextImage);
+        prevBtn.addEventListener('click', prevImage);
+
+        // Cerrar al hacer clic fuera
+        lightbox.addEventListener('click', (e: MouseEvent) => {
+          if (e.target === lightbox) hideLightbox();
+        });
+
+        // Teclado
+        window.addEventListener('keydown', (e: KeyboardEvent) => {
+          if (lightbox.classList.contains('hidden')) return;
+          if (e.key === 'ArrowRight') nextImage();
+          if (e.key === 'ArrowLeft') prevImage();
+          if (e.key === 'Escape') hideLightbox();
+        });
+
+        // Render inicial
+        renderGalleryPage(1);
+
+        console.log('Galería inicializada. Imágenes:', thumbImgs.length);
+      });
+    </script>
+
+
+  </section>
+</Layout>
