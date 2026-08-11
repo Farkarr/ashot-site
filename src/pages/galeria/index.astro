@@ -7,10 +7,18 @@ const imagePaths = import.meta.glob(
    { eager: true },
 );
 
-const images = Object.values(imagePaths).map((img: any) => ({
-   img: img.default,
-   alt: img.default.src.split("/").pop().split(".")[0],
-}));
+const images = Object.entries(imagePaths)
+  .sort(([pathA], [pathB]) =>
+    pathA.localeCompare(pathB, undefined, {
+      numeric: true,
+      sensitivity: "base",
+    })
+  )
+  .map(([_, img]: any) => ({
+    img: img.default,
+    alt: img.default.src.split("/").pop().split(".")[0],
+  }));
+
 ---
 
 <Layout title="Galería de fotos | Grupo ELAR">
@@ -31,7 +39,7 @@ const images = Object.values(imagePaths).map((img: any) => ({
                   alt={alt}
                   data-index={i}
                   class="w-full h-40 sm:h-48 md:h-56 object-cover rounded shadow hover:scale-105 transition-transform duration-300 cursor-pointer"
-                  loading="lazy"
+                  loading={i < 6 ? "eager" : "lazy"}
                />
             ))
          }
